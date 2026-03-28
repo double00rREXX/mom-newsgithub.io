@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>မြန်မာစာ YouTube</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #d0021b;
+            --red-dark: #a00015;
+            --gold: #f5a623;
+            --green: #27ae60;
+            --bg: #fdf6ec;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --muted: #666;
+            --border: #e8ddd0;
+            --step-bg: #f9f4ee;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans Myanmar', 'Pyidaungsu', Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--text);
+            padding-bottom: 60px;
+        }
+
+        /* ── TOP BANNER ── */
+        .banner {
+            background: var(--red);
+            color: white;
+            text-align: center;
+            padding: 22px 20px 18px;
+        }
+        .banner-flag { font-size: 48px; line-height: 1; margin-bottom: 8px; }
+        .banner h1 {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+        .banner p {
+            font-size: 20px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        /* ── MAIN WRAPPER ── */
+        .wrap {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 28px 18px;
+        }
+
+        /* ── INPUT CARD ── */
+        .input-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 30px 24px;
+            box-shadow: 0 6px 28px rgba(0,0,0,0.10);
+            border: 2px solid var(--border);
+            margin-bottom: 28px;
+        }
+        .input-card label {
+            display: block;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text);
+        }
+        .input-card input {
+            width: 100%;
+            padding: 20px 18px;
+            font-size: 19px;
+            font-family: inherit;
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            outline: none;
+            background: #fdf9f5;
+            color: var(--text);
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .input-card input:focus {
+            border-color: var(--red);
+        }
+        .input-card input::placeholder { color: #bbb; font-size: 17px; }
+
+        .btn-main {
+            width: 100%;
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 24px;
+            font-size: 28px;
+            font-weight: 900;
+            font-family: inherit;
+            border-radius: 16px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 5px 20px rgba(208,2,27,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .btn-main:hover { background: var(--red-dark); }
+        .btn-main:active { transform: scale(0.98); }
+
+        .error-box {
+            display: none;
+            background: #fff0f0;
+            border: 2.5px solid #ffaaaa;
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            font-size: 20px;
+            color: var(--red);
+            margin-top: 16px;
+            font-weight: 700;
+        }
+        .error-box.show { display: block; }
+
+        .tip {
+            text-align: center;
+            font-size: 17px;
+            color: var(--muted);
+            margin-top: 14px;
+            line-height: 1.6;
+        }
+        .tip strong { color: var(--red); font-size: 18px; }
+
+        /* ── SUCCESS STATE ── */
+        #success-section { display: none; }
+        #success-section.show { display: block; }
+
+        .success-card {
+            background: #edfaf3;
+            border: 3px solid var(--green);
+            border-radius: 24px;
+            padding: 26px 22px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .success-icon { font-size: 52px; margin-bottom: 10px; }
+        .success-card h2 {
+            font-size: 26px;
+            font-weight: 900;
+            color: #1a6b3c;
+            margin-bottom: 10px;
+        }
+        .success-card p {
+            font-size: 19px;
+            color: #2d7a4f;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .btn-open {
+            display: inline-block;
+            background: var(--green);
+            color: white;
+            text-decoration: none;
+            padding: 22px 40px;
+            font-size: 26px;
+            font-weight: 900;
+            font-family: inherit;
+            border-radius: 16px;
+            box-shadow: 0 5px 18px rgba(39,174,96,0.35);
+            transition: background 0.2s;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-open:hover { background: #1e8449; }
+
+        /* ── STEPS SECTION ── */
+        .steps-heading {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 18px;
+            padding-left: 4px;
+        }
+
+        .step-card {
+            background: var(--card);
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            padding: 22px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+        }
+        .step-num {
+            background: var(--red);
+            color: white;
+            font-size: 26px;
+            font-weight: 900;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .step-body { flex: 1; }
+        .step-body .step-title {
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        .step-body .step-desc {
+            font-size: 17px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        .step-visual {
+            margin-top: 12px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #ddd;
+        }
+
+        /* Inline SVG illustrations for each step */
+        .illus {
+            width: 100%;
+            display: block;
+        }
+
+        /* ── ALWAYS VISIBLE STEPS (before video) ── */
+        .always-steps {
+            background: #fffbea;
+            border: 2.5px solid var(--gold);
+            border-radius: 20px;
+            padding: 22px 20px;
+            margin-bottom: 28px;
+        }
+        .always-steps h3 {
+            font-size: 21px;
+            font-weight: 900;
+            color: #7a5000;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .always-steps ol { padding-left: 0; list-style: none; }
+        .always-steps li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 20px;
+            color: #5a3800;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            padding: 14px 16px;
+            background: white;
+            border-radius: 14px;
+            border: 1.5px solid #f0e0b0;
+        }
+        .always-steps li:last-child { margin-bottom: 0; }
+        .step-emoji { font-size: 30px; flex-shrink: 0; }
+        .btn-tag {
+            display: inline-block;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            padding: 3px 10px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .btn-tag.red { background: var(--red); }
+
+        @media (max-width: 480px) {
+            .banner h1 { font-size: 26px; }
+            .banner p { font-size: 18px; }
+            .btn-main { font-size: 24px; padding: 20px; }
+            .step-body .step-title { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="banner">
+    <div class="banner-flag">🇲🇲</div>
+    <h1>YouTube မြန်မာစာ<br>ကြည့်မည်</h1>
+    <p>လင့်ခ်ထည့်ပြီး ခလုတ်တစ်ချက်နှိပ်ရုံသာ</p>
+</div>
+
+<div class="wrap">
+
+    <!-- INPUT CARD -->
+    <div class="input-card">
+        <label for="videoUrl">📋 YouTube လင့်ခ် ထည့်ပါ</label>
+        <input
+            type="url"
+            id="videoUrl"
+            placeholder="https://youtu.be/..."
+            onkeydown="if(event.key==='Enter') go()"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            inputmode="url"
+        >
+        <button class="btn-main" onclick="go()">
+            ▶&nbsp;&nbsp;YouTube ဖွင့်မည်
+        </button>
+        <div class="error-box" id="errorBox">
+            ❌ လင့်ခ် မမှန်ပါ။ ထပ်မံ စစ်ဆေးပေးပါ။
+        </div>
+        <p class="tip">
+            ဖုန်းမှ YouTube → <strong>Share → Copy Link</strong> လုပ်ပြီး ဒီမှာ ကူးထည့်ပါ
+        </p>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div id="success-section">
+        <div class="success-card">
+            <div class="success-icon">✅</div>
+            <h2>ဗီဒီယို အဆင်သင့်ဖြစ်ပြီ!</h2>
+            <p>အောက်ပါ ခလုတ်ကို နှိပ်ပြီး YouTube တွင် ဖွင့်ပါ</p>
+            <a id="openBtn" href="#" target="_blank" class="btn-open">
+                🎬&nbsp;&nbsp;ဗီဒီယို ဖွင့်မည်
+            </a>
+        </div>
+
+        <p class="steps-heading">📖 မြန်မာစာတန်း ဖွင့်နည်း (အဆင့် ၃ ဆင့်)</p>
+
+        <!-- STEP 1 -->
+        <div class="step-card">
+            <div class="step-num">၁</div>
+            <div class="step-body">
+                <div class="step-title">ဗီဒီယို ဖွင့်ပြီးနောက် <span style="background:#333;color:white;padding:2px 8px;border-radius:6px;font-size:17px;">စာတန်းထိုး (CC)</span> ခလုတ်ကို နှိပ်ပါ</div>
+                <div class="step-desc">ဗီဒီယိုအောက် ညာဘက်တွင် ရှိသည်</div>
+                <div class="step-visual">
+                    <svg class="illus" viewBox="0 0 420 90" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="420" height="90" fill="#1a1a1a"/>
+                        <!-- progress bar -->
+                        <rect x="0" y="68" width="420" height="4" fill="#444"/>
+                        <rect x="0" y="68" width="160" height="4" fill="#ff0000"/>
+                        <circle cx="160" cy="70" r="6" fill="#ff0000"/>
+                        <!-- controls -->
+                        <!-- play icon -->
+                        <polygon points="18,76 18,88 28,82" fill="white"/>
+                        <!-- volume -->
+                        <rect x="35" y="78" width="4" height="8" fill="white" rx="1"/>
+                        <rect x="41" y="75" width="4" height="14" fill="white" rx="1"/>
+                        <rect x="47" y="72" width="4" height="20" fill="white" rx="1"/>
+                        <!-- time text -->
+                        <text x="58" y="85" fill="white" font-size="10" font-family="Arial">2:34 / 8:12</text>
+                        <!-- right side icons -->
+                        <!-- settings gear -->
+                        <text x="340" y="86" fill="#ccc" font-size="10" font-family="Arial">⚙</text>
+                        <!-- fullscreen -->
+                        <rect x="362" y="76" width="12" height="10" fill="none" stroke="#ccc" stroke-width="1.5"/>
+                        <!-- CC button HIGHLIGHTED -->
+                        <rect x="380" y="73" width="28" height="16" rx="4" fill="#ff0000"/>
+                        <text x="394" y="84" fill="white" font-size="10" font-weight="bold" font-family="Arial" text-anchor="middle">CC</text>
+                        <!-- arrow pointing to CC -->
+                        <polygon points="370,65 378,69 370,73" fill="#ffff00"/>
+                        <text x="310" y="63" fill="#ffff00" font-size="11" font-family="Arial" font-weight="bold">ဒီမှာ နှိပ်ပါ →</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-card">
+            <div class="step-num">၂</div>
+            <div class="step-body">
+                <div class="step-title"><span style="background:#333;color:white;padding:2px 8px;border-radius:6px;font-size:17px;">⚙ ဆက်တင်</span> → <span style="background:#333;color:white;padding:2px 8px;border-radius:6px;font-size:17px;">စာတန်းထိုး / CC</span> ကို နှိပ်ပါ</div>
+                <div class="step-desc">ထပ်ပေါ်လာသော မီနူးတွင် ရွေးပါ</div>
+                <div class="step-visual">
+                    <svg class="illus" viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="420" height="130" fill="#212121"/>
+                        <!-- menu panel -->
+                        <rect x="220" y="10" width="185" height="115" rx="8" fill="#383838"/>
+                        <!-- menu items -->
+                        <text x="232" y="35" fill="white" font-size="13" font-family="Arial">Annotations</text>
+                        <line x1="228" y1="42" x2="398" y2="42" stroke="#555" stroke-width="1"/>
+                        <text x="232" y="62" fill="white" font-size="13" font-family="Arial">Playback speed</text>
+                        <line x1="228" y1="70" x2="398" y2="70" stroke="#555" stroke-width="1"/>
+                        <!-- highlighted item -->
+                        <rect x="222" y="74" width="183" height="28" rx="4" fill="#ff0000"/>
+                        <text x="232" y="93" fill="white" font-size="13" font-family="Arial" font-weight="bold">Subtitles/CC  ›</text>
+                        <line x1="228" y1="103" x2="398" y2="103" stroke="#555" stroke-width="1"/>
+                        <text x="232" y="120" fill="white" font-size="13" font-family="Arial">Quality</text>
+                        <!-- arrow -->
+                        <text x="20" y="90" fill="#ffff00" font-size="12" font-family="Arial" font-weight="bold">ဒီကို နှိပ်ပါ →</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-card">
+            <div class="step-num">၃</div>
+            <div class="step-body">
+                <div class="step-title"><span style="background:#333;color:white;padding:2px 8px;border-radius:6px;font-size:17px;">အလိုအလျောက် ဘာသာပြန်</span> → <span style="background:#d0021b;color:white;padding:2px 8px;border-radius:6px;font-size:17px;">မြန်မာဘာသာ</span> ကို နှိပ်ပါ</div>
+                <div class="step-desc">ရှာမတွေ့ပါက အောက်သို့ ဆွဲချပါ</div>
+                <div class="step-visual">
+                    <svg class="illus" viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="420" height="150" fill="#212121"/>
+                        <rect x="110" y="8" width="200" height="138" rx="8" fill="#383838"/>
+                        <text x="120" y="30" fill="white" font-size="12" font-family="Arial">Off</text>
+                        <line x1="115" y1="36" x2="305" y2="36" stroke="#555" stroke-width="1"/>
+                        <!-- Auto-translate highlighted -->
+                        <rect x="112" y="38" width="196" height="24" rx="4" fill="#555"/>
+                        <text x="122" y="54" fill="white" font-size="12" font-family="Arial" font-weight="bold">Auto-translate  ›</text>
+                        <line x1="115" y1="63" x2="305" y2="63" stroke="#555" stroke-width="1"/>
+                        <text x="120" y="80" fill="#aaa" font-size="12" font-family="Arial">Albanian</text>
+                        <line x1="115" y1="86" x2="305" y2="86" stroke="#555" stroke-width="1"/>
+                        <!-- Burmese highlighted -->
+                        <rect x="112" y="89" width="196" height="26" rx="4" fill="#d0021b"/>
+                        <text x="130" y="106" fill="white" font-size="13" font-family="Arial" font-weight="bold">✓ Burmese</text>
+                        <line x1="115" y1="116" x2="305" y2="116" stroke="#555" stroke-width="1"/>
+                        <text x="120" y="133" fill="#aaa" font-size="12" font-family="Arial">Catalan</text>
+                        <!-- arrow -->
+                        <text x="316" y="106" fill="#ffff00" font-size="12" font-family="Arial" font-weight="bold">← ဒီကို</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /success-section -->
+
+    <!-- ALWAYS VISIBLE REMINDER (before pressing button) -->
+    <div class="always-steps" id="reminder-box">
+        <h3>💡 ဗီဒီယိုဖွင့်ပြီးနောက် မြန်မာစာဖွင့်နည်း</h3>
+        <ol>
+            <li>
+                <span class="step-emoji">1️⃣</span>
+                <span><span class="btn-tag">စာတန်းထိုး (CC)</span> ခလုတ်ကို နှိပ်ပါ</span>
+            </li>
+            <li>
+                <span class="step-emoji">2️⃣</span>
+                <span><span class="btn-tag">ဆက်တင် (⚙)</span> → <span class="btn-tag">စာတန်းထိုး / CC</span></span>
+            </li>
+            <li>
+                <span class="step-emoji">3️⃣</span>
+                <span><span class="btn-tag">အလိုအလျောက် ဘာသာပြန်</span> → <span class="btn-tag red">မြန်မာဘာသာ</span></span>
+            </li>
+        </ol>
+    </div>
+
+</div><!-- /wrap -->
+
+<script>
+    function extractVideoId(raw) {
+        const url = raw.trim();
+        const patterns = [
+            /[?&]v=([a-zA-Z0-9_-]{11})/,
+            /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+            /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+            /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+            /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
+        ];
+        for (const p of patterns) {
+            const m = url.match(p);
+            if (m && m[1]) return m[1];
+        }
+        return null;
+    }
+
+    function go() {
+        const input = document.getElementById('videoUrl').value.trim();
+        const errorBox = document.getElementById('errorBox');
+        errorBox.classList.remove('show');
+
+        if (!input) { errorBox.classList.add('show'); return; }
+
+        const videoId = extractVideoId(input);
+        if (!videoId) { errorBox.classList.add('show'); return; }
+
+        // Open YouTube directly — this is the ONLY reliable way to get
+        // auto-translate working. The ?hl=my param nudges the UI toward Burmese.
+        const ytUrl = `https://www.youtube.com/watch?v=${videoId}&hl=my&cc_load_policy=1&cc_lang_pref=my`;
+
+        document.getElementById('openBtn').href = ytUrl;
+
+        // Show success + steps, hide reminder
+        const successSection = document.getElementById('success-section');
+        successSection.classList.add('show');
+        document.getElementById('reminder-box').style.display = 'none';
+
+        // Scroll to success
+        setTimeout(() => successSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    }
+</script>
+
+</body>
+</html>
